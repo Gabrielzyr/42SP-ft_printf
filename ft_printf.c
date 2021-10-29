@@ -1,6 +1,27 @@
 #include "ft_printf.h"
-
 #include <stdio.h>
+
+char *ft_convertC(char *str, va_list args, size_t istStart)
+{
+	char *s;
+	char c = va_arg(args, int);
+
+	s = ft_calloc(2, sizeof(char));
+	s[0] = c;
+	str = ft_insert_strS(str, s, istStart - 1);
+
+	return (str);
+}
+
+char *ft_convertD(char *str, va_list args, size_t istStart)
+{
+	char *s;
+	int c = va_arg(args, int);
+
+	s = ft_itoa(c);
+	str = ft_insert_strS(str, s, istStart - 1);
+	return (str);
+}
 
 void ft_print_str(char *str)
 {
@@ -50,19 +71,16 @@ char *ft_insert_strS(char *str, char *inStr, size_t sub_len)
 	return (new_str);
 }
 
-int ft_get_str_type(const char *str)
+char *ft_get_str_type(char *str, size_t istStart, va_list args)
 {
-	char *find_params;
-
-	find_params = (char *)ft_strchr(str, '%');
-	if (*(find_params + 1) == 's')
-	{
-		
-		printf("find: S");
-	}
-	else if (*(find_params + 1) == 'c')
-		printf("find: C");
-	return (0);
+	// char *new_str;
+	if (str[istStart] == 'c')
+		str = ft_convertC(str, args, istStart);
+	else if (str[istStart] == 's')
+		str = ft_insert_strS(str, va_arg(args, char *), istStart - 1);
+	else if (str[istStart] == 'd')
+		str = ft_convertD(str, args, istStart);
+	return (str);
 }
 
 int ft_printf(const char *str, ...)
@@ -76,19 +94,24 @@ int ft_printf(const char *str, ...)
 	i = 0;
 	while (final_str[i])
 	{
-		if (final_str[i] == 'c' && final_str[i - 1] == '%')
+		if (final_str[i] == '%')
 		{
-			char *s;
-			char c = va_arg(args, int);
-			
-			s = ft_strdup(&c);
-			printf("char: %c str:%s", c, s);
-			ft_insert_strS(final_str, s,i - 1);
-		}
-		else if (final_str[i] == 's' && final_str[i - 1] == '%')
-		{
-			char *s = va_arg(args, char *);
-			final_str = ft_insert_strS(final_str, s, i - 1);
+			i++;
+			if (ft_strchr("cspdiuxX%", final_str[i]))
+			{
+				final_str = ft_get_str_type(final_str, i, args);
+				// char *s;
+				// char c = va_arg(args, int);
+
+				// s = ft_strdup("");
+				// s[0] = c;
+				// final_str = ft_insert_strS(final_str, "r", i - 1);
+			}
+			// else if (final_str[i] == 's')
+			// {
+			// 	char *s = va_arg(args, char *);
+			// 	final_str = ft_insert_strS(final_str, s, i - 1);
+			// }
 		}
 	
 		i++;
@@ -106,7 +129,8 @@ int main()
 	str = "Hello world",
 
 	// ft_printf("str here: %s | schar: %c %s %c", str, 'A', "opa", 'a');
-	ft_printf("str here: %s ce%cto %s\n", str, 'r',"sou teste");
+	ft_printf("str here: %s ce%cto %d %s\n", str, 'r', 54321, "sou teste");
+	// ft_printf("str here: ce %c to\n",'r');
 	// printf("\nprintf:\n");
 	// printf("str here: %s | schar: %c %s %c", str, 'A', "opa", 'a');
 	// printf("printf: %s %c %d %s\n", "hello", 'l', 3, "teste");

@@ -2,7 +2,7 @@ NAME = libftprintf.a
 
 libft_path = ./libft
 
-SRCS = ft_printf.c
+SRCS = ft_printf.c ft_printf_conversors.c
 
 OBJS = $(SRCS:%.c=%.o)
 
