@@ -2,3 +2,7 @@ a.out
 libftprintf.a
 *.o
 ./libft
+backup
+teste.*
+mainc.c
+utils.c
