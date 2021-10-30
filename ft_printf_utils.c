@@ -1,4 +1,12 @@
 #include "ft_printf.h"
+
+void ft_print_str(char *str)
+{
+	write(1, str, 1);
+	while (*str++)
+		write(1, str, 1);
+}
+
 char *ft_strjoin_free(char *s1, char const *s2)
 {
 	char *new_str;

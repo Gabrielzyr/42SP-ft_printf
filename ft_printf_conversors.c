@@ -1,27 +1,32 @@
 #include "ft_printf.h"
 #include <stdio.h>
 
-char	*ft_convert_c(char *str, va_list args, size_t ist_start)
+int	ft_convert_c(va_list args)
 {
-	char *s;
 	char c = va_arg(args, int);
 
-	s = ft_calloc(2, sizeof(char));
-	s[0] = c;
-	str = ft_insert_str_s(str, s, ist_start - 1);
-	free(s);
-	return (str);
+	write(1, &c, 1);
+	return (1);
 }
 
-char *ft_convert_d_i(char *str, va_list args, size_t ist_start)
+int ft_convert_d_i(va_list args)
 {
+	size_t i;
 	char *s;
-	int c = va_arg(args, int);
 
-	s = ft_itoa(c);
-	str = ft_insert_str_s(str, s, ist_start - 1);
+	s = ft_itoa(va_arg(args, int));
+	ft_putstr_fd(s, 1);
+	i = ft_strlen(s);
 	free(s);
-	return (str);
+	return ((int)i);
+}
+int ft_convert_s(char *print_str)
+{
+	size_t i;
+
+	i = ft_strlen(print_str);
+	ft_putstr_fd(print_str, 1);
+	return ((int)i);
 }
 
 // char	*ft_convert%(char *str, va_list args, size_t istStart)

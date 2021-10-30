@@ -4,5 +4,5 @@ libftprintf.a
 ./libft
 backup
 teste.*
-mainc.c
+main.c
 utils.c

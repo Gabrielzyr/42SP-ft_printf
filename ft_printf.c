@@ -23,13 +23,6 @@
 // 	return (str);
 // }
 
-void ft_print_str(char *str)
-{
-	write(1, str, 1);
-	while (*str++)
-		write(1, str, 1);
-}
-
 // char *ft_strjoin_free(char *s1, char const *s2)
 // {
 // 	char *new_str;
@@ -71,20 +64,29 @@ void ft_print_str(char *str)
 // 	return (new_str);
 // }
 
-char *ft_get_str_type(char *str, size_t ist_start, va_list args)
+int ft_get_str_type(char *str, size_t ist_start, va_list args)
 {
+	int length;
 	// char *new_str;
+	length = 0;
 	if (str[ist_start] == 'c')
-		str = ft_convert_c(str, args, ist_start);
+		length = ft_convert_c(args);
 	else if (str[ist_start] == 's')
-		str = ft_insert_str_s(str, va_arg(args, char *), ist_start - 1);
+		length = ft_convert_s(va_arg(args, char *));
 	else if (str[ist_start] == 'd' || str[ist_start] == 'i')
-		str = ft_convert_d_i(str, args, ist_start);
-	else if (str[ist_start] == 'x')
-		str = ft_convert_x(str, va_arg(args, size_t), ist_start - 1);
-	// else if (str[ist_start] == 'X')
-	// 	str = ft_toupper(ft_convert_x());
-	return (str);
+		length = ft_convert_d_i(args);
+	else if (str[ist_start] == 'x' || str[ist_start] == 'X')
+		length = ft_convert_x(va_arg(args, unsigned int), str[ist_start]);
+	else if (str[ist_start] == '%')
+	{
+		write(1, "%", 1);
+		length = 1;
+	}
+	else if (str[ist_start] == 'p')
+		length = ft_convert_p(va_arg(args, size_t));
+			// else if (str[ist_start] == 'X')
+			// 	length = ft_toupper(ft_convert_x());
+		return (length);
 }
 
 int ft_printf(const char *str, ...)
@@ -92,25 +94,35 @@ int ft_printf(const char *str, ...)
 	va_list args;
 	size_t i;
 	char *final_str;
+	int flag;
+	size_t length;
 
 	final_str = (char *)str;
 	va_start(args, str);
 	i = 0;
+	length = 0;
 	while (final_str[i])
 	{
+		flag = 0;
 		if (final_str[i] == '%')
 		{
 			i++;
 			if (ft_strchr("cspdiuxX%", final_str[i]))
 			{
-				final_str = ft_get_str_type(final_str, i, args);
+				length += ft_get_str_type(final_str, i, args);
+				flag = 1;
 			}
+		}
+		if (flag == 0)
+		{
+			length++;
+			write(1, &final_str[i], 1);
 		}
 		i++;
 	}
 	va_end(args);
-	ft_print_str(final_str);
-	free(final_str);
-	return (0);
+	// ft_print_str(final_str);
+	// free(final_str);
+	return (length);
 }
 
