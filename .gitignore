@@ -6,3 +6,5 @@ backup
 teste.*
 main.c
 utils.c
+ft_printf_tester
+printfTester

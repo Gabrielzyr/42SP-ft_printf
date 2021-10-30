@@ -20,17 +20,26 @@ int ft_convert_d_i(va_list args)
 	free(s);
 	return ((int)i);
 }
+
 int ft_convert_s(char *print_str)
 {
 	size_t i;
 
+	if (!print_str)
+	{
+		ft_putstr_fd("(null)", 1);
+		return (6);
+	}
 	i = ft_strlen(print_str);
 	ft_putstr_fd(print_str, 1);
+	// free(print_str);
 	return ((int)i);
 }
 
-// char	*ft_convert%(char *str, va_list args, size_t istStart)
-// {
-// 	str = ft_insert_strS(str, "%", istStart - 1);
-// 	return (str);
-// }
+int ft_convert_u(va_list args)
+{
+	int i;
+
+	i = ft_utoa_print(va_arg(args, unsigned int));
+	return (i);
+}

@@ -77,15 +77,15 @@ int ft_get_str_type(char *str, size_t ist_start, va_list args)
 		length = ft_convert_d_i(args);
 	else if (str[ist_start] == 'x' || str[ist_start] == 'X')
 		length = ft_convert_x(va_arg(args, unsigned int), str[ist_start]);
+	else if (str[ist_start] == 'p')
+		length = ft_convert_p(va_arg(args, size_t));
+	else if (str[ist_start] == 'u')
+		length = ft_convert_u(args);
 	else if (str[ist_start] == '%')
 	{
 		write(1, "%", 1);
 		length = 1;
 	}
-	else if (str[ist_start] == 'p')
-		length = ft_convert_p(va_arg(args, size_t));
-			// else if (str[ist_start] == 'X')
-			// 	length = ft_toupper(ft_convert_x());
 		return (length);
 }
 

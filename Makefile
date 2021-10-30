@@ -7,7 +7,7 @@ SRCS = ft_printf.c ft_printf_utils.c ft_printf_conversors.c ft_printf_conversor_
 OBJS = $(SRCS:%.c=%.o)
 
 CC = clang 
-CFLAGS = -Wall -Werror -Wextra -g      
+CFLAGS = -Wall -Werror -Wextra       
 
 $(NAME): $(OBJS)
 	make all -C $(libft_path)

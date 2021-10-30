@@ -1,71 +1,77 @@
 #include "ft_printf.h"
-#include <stdio.h>
-
-// char *ft_strjoin_free(char *s1, char const *s2);
 
 void ft_putnbr(char n)
 {
 	write(1, &n, 1);
 }
 
-void print_nbr(char *ist_str, int nbr, char *base, size_t base_len)
+void print_nbr(unsigned int nbr, char *base, unsigned int base_len)
 {
-	size_t nbr2;
-	size_t str_len;
+	unsigned int nbr2;
 
-	str_len = ft_strlen(ist_str);
-	if (nbr < 0)
-	{
-		write(1, "-", 1);
-		nbr2 = (size_t)(nbr * -1);
-	}
-	else
-		nbr2 = (size_t)(nbr);
+	nbr2 = (unsigned int)(nbr);
 	if (nbr2 < base_len)
-		ist_str[str_len] = base[nbr2];
+		write(1, &base[nbr2], 1);
 	else
 	{
-		print_nbr(ist_str, nbr2 / base_len, base, base_len);
-		print_nbr(ist_str, nbr2 % base_len, base, base_len);
+		print_nbr(nbr2 / base_len, base, base_len);
+		print_nbr(nbr2 % base_len, base, base_len);
 	}
 }
 
 int ft_convert_x(unsigned int unbr, char c)
 {
-	char *ist_str;
 	size_t length;
 
 	length = 0;
-	ist_str = ft_calloc(2, sizeof(char));
 	if (c == 'x')
-		print_nbr(ist_str, unbr, "0123456789abcdef", 16);
+		print_nbr(unbr, "0123456789abcdef", 16);
 	else
-		print_nbr(ist_str, unbr, "0123456789ABCDEF", 16);
-	ft_putstr_fd(ist_str, 1);
-	length = ft_strlen(ist_str);
-	free(ist_str);
+		print_nbr(unbr, "0123456789ABCDEF", 16);
+	if (unbr == 0)
+		return (1);
+	while (unbr)
+	{
+		unbr = unbr / 16;
+		length++;
+	}
 	return (length);
+}
+
+void print_nbr_p(size_t nbr, char *base, size_t base_len)
+{
+	size_t nbr2;
+
+	nbr2 = (size_t)(nbr);
+	// printf(nbr)
+	if (nbr2 < base_len)
+		write(1, &base[nbr2], 1);
+	else
+	{
+		print_nbr_p( nbr2 / base_len, base, base_len);
+		print_nbr_p( nbr2 % base_len, base, base_len);
+	}
 }
 
 int ft_convert_p(size_t unbr)
 {
-	char *ist_str;
 	size_t length;
 
-	length = 0;
-	ist_str = ft_calloc(2, sizeof(char));
-	print_nbr(ist_str, unbr, "0123456789abcdef", 16);
-	length = ft_strlen(ist_str);
-	if (length == 0)
+	ft_putstr_fd("0x", 1);
+	if (!unbr)
 	{
-		free(ist_str);
-		ft_putstr_fd("0x0", 1);
+		write(1, "0", 1);
 		return (3);
 	}
-	ft_putstr_fd("0x", 1);
-	ft_putstr_fd(ist_str, 1);
-	free(ist_str);
-	return (length+2);
+	print_nbr_p( unbr, "0123456789abcdef", 16);
+	length  = 0;
+	while (unbr)
+	{
+		unbr = unbr / 16;
+		length++;
+	}
+	length += 2;
+	return (length);
 }
 
 // int ft_convert_X(char *str, unsigned int unbr, size_t ist_start)

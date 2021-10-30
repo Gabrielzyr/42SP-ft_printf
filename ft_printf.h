@@ -15,6 +15,7 @@ int ft_convert_s(char *print_str);
 char *ft_itoa(int n);
 char *ft_strchr(const char *s, int c);
 int ft_toupper(int c);
+int ft_utoa_print(unsigned int n);
 
 // char *ft_insert_str_s(char *str, char *in_str, size_t sub_len);
 // char *ft_strjoin_free(char *s1, const char *s2);
